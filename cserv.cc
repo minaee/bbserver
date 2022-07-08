@@ -14,8 +14,9 @@
 
 
 /*
-* an extention to professor implementation of concurrent server
-* attempting to make it work with threads
+* an extention to professor's implementation of concurrent server
+* attempting to implement the CS 590 project
+*
 * By Shahriar Minaei-Jalil
 * Student ID: 002 30 17 23
 */
@@ -25,9 +26,11 @@
 #include <signal.h>
 #include <stdio.h>
 #include "tcp_utils.h"
+#include <unistd.h> // getopt for command-line processing
 
 #include <thread>
 #include <pthread.h>
+#include <mutex>
 #include <vector>
 #include <iostream>
 #include <string>
@@ -38,15 +41,74 @@
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 
 
+using namespace std;
+
+class SynchronizedFile {
+    public:
+        SynchronizedFile (const string& path) : _path(path) {
+            // Open file for writing...
+            // stream to read and write from/into 'bbserv.txt' file
+            
+            strm_bbserv.open("bbserv.txt", std::ios_base::out | std::ios_base::app);
+        }
+
+        void write (const string& dataToWrite) {
+            // Write to the file in a synchronized manner (described below)...
+
+            std::lock_guard<std::mutex> lock(_writerMutex);
+            strm_bbserv << dataToWrite << std::endl;
+
+        }
+
+    private:
+        string _path;
+        std::mutex _writerMutex;
+        std::fstream strm_bbserv;
+};
+
+class Writer {
+    public:
+        Writer (std::shared_ptr<SynchronizedFile> sf) : _sf(sf) {}
+
+        void someFunctionThatWritesToFile (string line="Some data to write...") {
+            // Do some work...
+            _sf->write(line);
+            std::cout<<"write in some function that writes to file.\n";
+
+        }
+    private:
+        std::shared_ptr<SynchronizedFile> _sf;
+};
+
+std::string generate_message_number(std::string counter){
+
+    boost::uuids::random_generator generator;
+
+    boost::uuids::uuid uuid1 = generator();
+    // std::cout << uuid1 << std::endl;
+
+    int previous = stoi(counter);
+
+    // Function to find the last
+    // character ch in str
+    size_t found = to_string(uuid1).find_last_of("-");
+
+    if (found != string::npos){
+        return to_string(uuid1).substr(found+1) + to_string(previous+1);
+    } else{
+        return (std::string)"123456789000" + to_string(previous+1);
+    }
+    
+}
 /*
 * returns a vector of user command splited by space
 */
-std::vector<std::string> split(std::string str, char del){
+std::vector<std::string> split(char str[], int n, char del){
     // declaring temp string to store the curr "word" upto del
     std::string temp = "";
     std::vector<std::string> words;
 
-    for(int i=0; i<(int)str.size(); i++){
+    for(int i=0 ; i<n ; i++){
         // If cur char is not del, then append it to the cur "word", otherwise
         // you have completed the word, print it, and start a new word.
         if(str[i] != del){
@@ -64,6 +126,7 @@ std::vector<std::string> split(std::string str, char del){
     return words;
 }
 
+
 /*
 * process the client command
 */
@@ -73,7 +136,7 @@ void proccess_req(char req[]){
 
     std::vector<std::string> words;
 
-    words = split(req, ' ');
+    // words = split(req, ' ');
 
     for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
         std::cout << *i << ' ';
@@ -97,6 +160,13 @@ void do_client (int sd) {
     std::ofstream out_to_file;
     out_to_file.open("received_commands.txt", std::ios::app);
 
+    // Create the synchronized file
+    auto synchronizedFile = std::make_shared<SynchronizedFile>("bbserv.txt");
+
+    // Create the writers using the same synchronized file
+    Writer writer1(synchronizedFile);
+    Writer writer2(synchronizedFile);
+
     // Loop while the client has something to say...
     while ((n = readline(sd,req,ALEN-1)) != recv_nodata) {
         if (strcmp(req,"quit") == 0) {
@@ -105,18 +175,41 @@ void do_client (int sd) {
             return;
         }
 
-        // printf("req is: \"%s\" in printf\n", req);
-        // std::cout<<"req is: "<<req<<" in cout\n";
-
         //saves the received command to a local file
         out_to_file << req << std::endl;
 
-        proccess_req(req);
+        // proccess_req(req);
+        std::vector<std::string> words;
+
+        words = split(req, std::char_traits<char>::length(req), ' ');
+
+        std::cout<<words[0]<<std::endl;
+
+        if(words[0] == "WRITE"){
+            std::cout<<"this is a write command.\n";
+            auto uuid = generate_message_number(std::string("1000"));
+            std::string temp = uuid;
+            temp += "/";
+            temp += "shahriar";
+            temp += words[1];
+            writer1.someFunctionThatWritesToFile(temp);
+            
+
+            send(sd,ack,strlen(ack),0);
+            send(sd,temp.c_str(),temp.length(),0);
+            send(sd,"\n",1,0);
+        }
         
 
-        send(sd,ack,strlen(ack),0);
-        send(sd,req,strlen(req),0);
-        send(sd,"\n",1,0);
+        // for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
+        //     std::cout << *i << ' ';
+        //     // printf("%s ", *i);
+        // }
+        
+
+        // send(sd,ack,strlen(ack),0);
+        // send(sd,req,strlen(req),0);
+        // send(sd,"\n",1,0);
     }
     // read 0 bytes = EOF:
     printf("Connection closed by client.\n");
@@ -154,6 +247,9 @@ int main (int argc, char** argv) {
     std::fstream strm_conf;
     strm_conf.open("bbserv.conf", std::ios_base::in );
 
+    // // stream to read and write from/into 'bbserv.conf' file
+    // std::fstream strm_bbserv;
+    // strm_bbserv.open("bbserv.txt", std::ios_base::in | std::ios_base::out );
 
     std::vector<std::thread> threads;
     char greeting[] = "Greetings...\n";

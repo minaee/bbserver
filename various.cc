@@ -4,25 +4,33 @@
 #include <string>
 #include <fstream>
 #include <stdio.h>
-// #include <boost/uuid/uuid.hpp>            // uuid class
-// #include <boost/uuid/uuid_generators.hpp> // generators
-// #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+#include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid_generators.hpp> // generators
+#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 
 using namespace std;
 
 
 
-// auto generate_uuid(){
-//     boost::uuids::random_generator generator;
+auto generate_uuid(std::string counter){
+    boost::uuids::random_generator generator;
 
-//     boost::uuids::uuid uuid1 = generator();
-//     std::cout << uuid1 << std::endl;
+    boost::uuids::uuid uuid1 = generator();
+    // std::cout << uuid1 << std::endl;
 
-//     // boost::uuids::uuid uuid2 = generator();
-//     // std::cout << uuid2 << std::endl;
+    int previous = stoi(counter);
 
-//     return uuid1;
-// }
+    // Function to find the last
+    // character ch in str
+    size_t found = to_string(uuid1).find_last_of("-");
+
+    if (found != string::npos){
+        return to_string(uuid1).substr(found+1) + to_string(previous+1);
+    } else{
+        return (std::string)"123456789000" + to_string(previous+1);
+    }
+    
+}
 
 
 void func(int a){
@@ -96,31 +104,34 @@ int main (){
     // boost::uuids::uuid uuid2 = generator();
     // std::cout << uuid2 << std::endl;
 
+    auto uuid = generate_uuid(std::string("1000"));
+    std::cout<<uuid<<std::endl;
+    std::cout<<uuid.size()<<std::endl;
 
-    std::vector<std::string> words;
-    std::string text = "User shahriar mj";
+    // std::vector<std::string> words;
+    // std::string text = "User shahriar mj";
     
-    std::fstream strm;
+    // std::fstream strm;
 
-    strm.open("configuration.txt", std::ios_base::in | std::ios_base::out | std::ios_base::app );
+    // strm.open("configuration.txt", std::ios_base::in | std::ios_base::out | std::ios_base::app );
 
-    if(strm.is_open()){
-        std::cout<<"configuration file opened!\n";
-        char line[100];
-        while (strm >> line) {
-                strm.getline(line, 100, '\n');
-                std::cout << line << std::endl;
-                words = split(line, std::char_traits<char>::length(line), ' ');
+    // if(strm.is_open()){
+    //     std::cout<<"configuration file opened!\n";
+    //     char line[100];
+    //     while (strm >> line) {
+    //             strm.getline(line, 100, '\n');
+    //             std::cout << line << std::endl;
+    //             words = split(line, std::char_traits<char>::length(line), ' ');
 
-                    for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
-                        std::cout << *i << '\n';
-                    }
-                    std::cout<<std::endl<<words[1]<<std::endl;
-        }       
+    //                 for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
+    //                     std::cout << *i << '\n';
+    //                 }
+    //                 std::cout<<std::endl<<words[1]<<std::endl;
+    //     }       
 
-    } else {
-        std::cout<<"Error, configuration file Not opened!\n";
-    }
+    // } else {
+    //     std::cout<<"Error, configuration file Not opened!\n";
+    // }
     
     
     // strm << text << std::endl;
@@ -148,11 +159,6 @@ int main (){
     // }
 
     
-
-    
-
-
-
     return 0;
     
 }
