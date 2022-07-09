@@ -40,7 +40,8 @@
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 
-
+std::mutex m;   //  to gaurd the counter
+int counter = 1000; // counter to follow the message-number sequence
 using namespace std;
 
 class SynchronizedFile {
@@ -80,23 +81,30 @@ class Writer {
         std::shared_ptr<SynchronizedFile> _sf;
 };
 
-std::string generate_message_number(std::string counter){
+
+
+/*
+* generate a unique message number that follows 
+* the previous received message number
+*/
+std::string generate_message_number(int counter){
 
     boost::uuids::random_generator generator;
 
     boost::uuids::uuid uuid1 = generator();
     // std::cout << uuid1 << std::endl;
 
-    int previous = stoi(counter);
+    // int previous = stoi(counter);
 
     // Function to find the last
     // character ch in str
     size_t found = to_string(uuid1).find_last_of("-");
-
+    
+    
     if (found != string::npos){
-        return to_string(uuid1).substr(found+1) + to_string(previous+1);
+        return to_string(uuid1).substr(found+1) + to_string(counter);
     } else{
-        return (std::string)"123456789000" + to_string(previous+1);
+        return (std::string)"123456789ABC" + to_string(counter);
     }
     
 }
@@ -157,6 +165,9 @@ void do_client (int sd) {
     const char* ack = "ACK: ";
     int n;
     
+    std::string poster;  // name of the current user
+    
+    // stroing received commands
     std::ofstream out_to_file;
     out_to_file.open("received_commands.txt", std::ios::app);
 
@@ -169,7 +180,7 @@ void do_client (int sd) {
 
     // Loop while the client has something to say...
     while ((n = readline(sd,req,ALEN-1)) != recv_nodata) {
-        if (strcmp(req,"quit") == 0) {
+        if ((strcmp(req,"quit") == 0 )| (strcmp(req, "") == 0)) {
             printf("Received quit, sending EOF.\n");
             shutdown(sd,1);
             return;
@@ -182,23 +193,40 @@ void do_client (int sd) {
         std::vector<std::string> words;
 
         words = split(req, std::char_traits<char>::length(req), ' ');
+        // std::cout<<words[0]<<std::endl;
 
-        std::cout<<words[0]<<std::endl;
-
-        if(words[0] == "WRITE"){
-            std::cout<<"this is a write command.\n";
-            auto uuid = generate_message_number(std::string("1000"));
-            std::string temp = uuid;
-            temp += "/";
-            temp += "shahriar";
-            temp += words[1];
-            writer1.someFunctionThatWritesToFile(temp);
+        if(words[0] == "USER"){
+            std::cout<<"received a USER command.\n";
+            if(words[1] == ""){
+                poster = "nobody";
+            } else {
+                poster = words[1];
+            }
+        }
+        else if(words[0] == "WRITE"){
+            std::cout<<"received a WRITE command.\n";
+            
+            auto uuid = generate_message_number(counter); //generate uuid and assign counter to the end of it
+            
+            std::lock_guard<std::mutex> lock(m);
+            counter += 1;    // increase counter for the next message
+            
+            uuid += "/";
+            uuid += poster;
+            uuid += "/";
+            for( int i=1 ; i<(int)words.size() ; i++){
+                uuid += words[i];
+                uuid += " ";
+            }
+            
+            writer1.someFunctionThatWritesToFile(uuid);
             
 
             send(sd,ack,strlen(ack),0);
-            send(sd,temp.c_str(),temp.length(),0);
+            send(sd,uuid.c_str(),uuid.length(),0);
             send(sd,"\n",1,0);
         }
+        // else if(words[0] == "READ")
         
 
         // for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
@@ -252,6 +280,12 @@ int main (int argc, char** argv) {
     // strm_bbserv.open("bbserv.txt", std::ios_base::in | std::ios_base::out );
 
     std::vector<std::thread> threads;
+
+    // for(int i=0 ; i<5 ; i++){
+    //     threads.push_back(std::thread(do_client, ssock));
+    // }
+
+
     char greeting[] = "Greetings...\n";
 
     msock = passivesocket(port,qlen);
@@ -284,6 +318,7 @@ int main (int argc, char** argv) {
             // do_client(ssock);  //calling the method to proccess the message
             threads.push_back(std::thread(do_client, ssock));
             threads.back().join();
+
             close(ssock);
             printf("Outgoing client removed.\n");
             return 0;

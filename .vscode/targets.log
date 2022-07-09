@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul  8 13:54:26 2022
+# Make data base, printed on Sat Jul  9 10:29:21 2022
 
 # Variables
 
@@ -47,7 +47,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:53813
+JOURNAL_STREAM = 8:52192
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 1)
@@ -69,7 +69,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 INFOPATH = /home/linuxbrew/.linuxbrew/share/info:/home/linuxbrew/.linuxbrew/share/info:
 # environment
-MANAGERPID = 2497
+MANAGERPID = 2472
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -85,7 +85,7 @@ GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-SESSION_MANAGER = local/Z50-70:@/tmp/.ICE-unix/2727,unix/Z50-70:/tmp/.ICE-unix/2727
+SESSION_MANAGER = local/Z50-70:@/tmp/.ICE-unix/2702,unix/Z50-70:/tmp/.ICE-unix/2702
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -93,7 +93,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 23abc3e12d7c40809f1764b464c0ede1
+INVOCATION_ID = 25d1ccdf331544b5920371dc85393d2e
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -103,7 +103,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 9669
+GIO_LAUNCHED_DESKTOP_FILE_PID = 7721
 # automatic
 %F = $(notdir $%)
 # environment
@@ -113,7 +113,7 @@ PWD = /home/shahriar/cpp/bbserver
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2690
+SSH_AGENT_PID = 2665
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -227,7 +227,7 @@ LC_ADDRESS = en_CA.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 9669
+VSCODE_PID = 7721
 # variable set hash-table stats:
 # Load=109/1024=11%, Rehash=0, Collisions=19/134=14%
 
@@ -237,9 +237,9 @@ VSCODE_PID = 9669
 
 # Directories
 
-# . (device 2058, inode 2105975): 22 files, no impossibilities.
+# . (device 2058, inode 2105975): 25 files, no impossibilities.
 
-# 22 files, no impossibilities in 1 directories.
+# 25 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -249,7 +249,7 @@ VSCODE_PID = 9669
 
 cserv: cserv.o tcp_utils.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-08 02:43:32.433951023
+#  Last modified 2022-07-09 01:38:15.467442127
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 24):
@@ -264,7 +264,7 @@ all: triv_client cserv
 
 client.o: tcp_utils.h client.cc
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-08 02:43:30.546008681
+#  Last modified 2022-07-09 01:38:13.467380634
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 12):
@@ -273,18 +273,18 @@ client.o: tcp_utils.h client.cc
 # Not a target:
 cserv.cc:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-08 02:43:24.750192391
+#  Last modified 2022-07-09 01:38:02.479044107
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
- 
 client.cc:
 #  Implicit rule search has been done.
 #  Last modified 2022-07-04 02:18:32.043653
 #  File has been updated.
 #  Successfully updated.
 
+ 
 # Not a target:
 tcp_utils.h:
 #  Implicit rule search has been done.
@@ -314,7 +314,7 @@ clean:
 
 tcp_utils.o: tcp_utils.h tcp_utils.cc
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-08 02:43:30.618006461
+#  Last modified 2022-07-09 01:38:13.547383092
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 8):
@@ -322,7 +322,7 @@ tcp_utils.o: tcp_utils.h tcp_utils.cc
 
 triv_client: client.o tcp_utils.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-08 02:43:30.698003994
+#  Last modified 2022-07-09 01:38:13.615385182
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 15):
@@ -337,7 +337,7 @@ tcp_utils.cc:
 
 cserv.o: tcp_utils.h cserv.cc
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-08 02:43:32.31795453
+#  Last modified 2022-07-09 01:38:15.339438189
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 21):
@@ -351,12 +351,12 @@ cserv.o: tcp_utils.h cserv.cc
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 28 / storage = 278 B / avg = 9 B
-# current buf: size = 8162 B / used = 278 B / count = 28 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 31 / storage = 303 B / avg = 9 B
+# current buf: size = 8162 B / used = 303 B / count = 31 / avg = 9 B
 
-# strcache performance: lookups = 57 / hit rate = 50%
+# strcache performance: lookups = 60 / hit rate = 48%
 # hash-table stats:
-# Load=28/8192=0%, Rehash=0, Collisions=1/57=2%
-# Finished Make data base on Fri Jul  8 13:54:26 2022
+# Load=31/8192=0%, Rehash=0, Collisions=1/60=2%
+# Finished Make data base on Sat Jul  9 10:29:21 2022
 
  
