@@ -7,6 +7,7 @@
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+#include <regex>
 
 using namespace std;
 
@@ -104,34 +105,40 @@ int main (){
     // boost::uuids::uuid uuid2 = generator();
     // std::cout << uuid2 << std::endl;
 
-    auto uuid = generate_uuid(std::string("1000"));
-    std::cout<<uuid<<std::endl;
-    std::cout<<uuid.size()<<std::endl;
+    // auto uuid = generate_uuid(std::string("1000"));
+    // std::cout<<uuid<<std::endl;
+    // std::cout<<uuid.size()<<std::endl;
 
-    // std::vector<std::string> words;
+    // bool contains_non_alpha = std::regex_match(uuid, std::regex("^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$"));
+
+    // std::cout<<contains_non_alpha<<std::endl;
+    std::vector<std::string> words;
     // std::string text = "User shahriar mj";
     
-    // std::fstream strm;
+    std::fstream strm;
 
-    // strm.open("configuration.txt", std::ios_base::in | std::ios_base::out | std::ios_base::app );
+    strm.open("bbserv.txt", std::ios_base::in   );
 
-    // if(strm.is_open()){
-    //     std::cout<<"configuration file opened!\n";
-    //     char line[100];
-    //     while (strm >> line) {
-    //             strm.getline(line, 100, '\n');
-    //             std::cout << line << std::endl;
-    //             words = split(line, std::char_traits<char>::length(line), ' ');
+    if(strm.is_open()){
+        std::cout<<"bbserv file opened!\n";
 
-    //                 for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
-    //                     std::cout << *i << '\n';
-    //                 }
-    //                 std::cout<<std::endl<<words[1]<<std::endl;
-    //     }       
+        // std::string line;
+        char line[250];
 
-    // } else {
-    //     std::cout<<"Error, configuration file Not opened!\n";
-    // }
+        while ( strm.getline(line, 250, '\n') ) {
+                // strm.getline(line, 250, '\n');
+                std::cout << line << std::endl;
+                words = split(line, std::char_traits<char>::length(line), '/');
+
+                // for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
+                //     std::cout << *i << ' ';
+                // }
+                std::cout<<std::endl<<words.size()<<std::endl;
+        }       
+
+    } else {
+        std::cout<<"Error, bbserv file Not opened!\n";
+    }
     
     
     // strm << text << std::endl;

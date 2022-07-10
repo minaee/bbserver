@@ -39,6 +39,7 @@
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+#include <regex>
 
 std::mutex m;   //  to gaurd the counter
 int counter = 1000; // counter to follow the message-number sequence
@@ -165,7 +166,7 @@ void do_client (int sd) {
     const char* ack = "ACK: ";
     int n;
     
-    std::string poster;  // name of the current user
+    std::string poster = "nobody";  // name of the current user
     
     // stroing received commands
     std::ofstream out_to_file;
@@ -180,7 +181,7 @@ void do_client (int sd) {
 
     // Loop while the client has something to say...
     while ((n = readline(sd,req,ALEN-1)) != recv_nodata) {
-        if ((strcmp(req,"quit") == 0 )| (strcmp(req, "") == 0)) {
+        if ((strcmp(req,"quit") == 0 ) | (strcmp(req, "") == 0)) {
             printf("Received quit, sending EOF.\n");
             shutdown(sd,1);
             return;
@@ -197,10 +198,67 @@ void do_client (int sd) {
 
         if(words[0] == "USER"){
             std::cout<<"received a USER command.\n";
-            if(words[1] == ""){
-                poster = "nobody";
+
+            //regex to find letters and numbers and space
+            if( !std::regex_match(words[1], std::regex("^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$"))){ 
+                std::string respond = "ERROR USER bad user name. it can only contains alphabets and numbers.\n";
+                std::cout<<respond;
+                send(sd,respond.c_str(),respond.length(),0);
+                send(sd,"\n",1,0);
             } else {
                 poster = words[1];
+                std::string respond = "Hello ";
+                respond += poster;
+                send(sd,respond.c_str(),respond.length(),0);
+                send(sd,"\n",1,0);
+            }
+            
+        }
+        else if(words[0] == "READ"){
+            std::string message_number = words[1] ;
+
+            std::fstream strm;
+            strm.open("bbserv.txt", std::ios_base::in );
+            std::string usr, msg, respond;
+            if(strm.is_open()){
+                // std::cout<<"bbserv file opened!\n";
+
+                std::vector<std::string> temp;
+                char line[250];
+                bool found = 0;
+
+                while ( strm.getline(line, 250, '\n') ) {
+                        // strm.getline(line, 250, '\n');
+                        // std::cout << line << std::endl;
+                        temp = split(line, std::char_traits<char>::length(line), '/');
+
+                        // for (std::vector<std::string>::const_iterator i = temp.begin(); i != temp.end(); i++){
+                        //     std::cout << *i << ' ';
+                        // }
+                        // std::cout<<std::endl<<temp.size()<<std::endl;
+                        if(temp[0] == message_number){
+                            usr = temp[1];
+                            msg = temp[2];
+                            // MESSAGE message-number poster/message
+                            respond = "MESSAGE" + ' ' + message_number + ' ' + usr + '/' + msg;
+                            send(sd,respond.c_str(),respond.length(),0);
+                            send(sd,"\n",1,0);
+                            found = true;
+                        }
+                }       
+                if(found == false){
+                    // UNKNOWN message-number text
+                    respond = "UNKNOWN" + ' ' + message_number + ' ' + "message not found!\n";
+                    send(sd,respond.c_str(),respond.length(),0);
+                    send(sd,"\n",1,0);
+                }
+
+            } else {
+                // std::cout<<"Error, bbserv file Not opened!\n";
+                // ERROR READ text
+                respond = "ERROR READ the bulletin board file not found!\n";
+                send(sd,respond.c_str(),respond.length(),0);
+                send(sd,"\n",1,0);
             }
         }
         else if(words[0] == "WRITE"){
@@ -286,7 +344,12 @@ int main (int argc, char** argv) {
     // }
 
 
-    char greeting[] = "Greetings...\n";
+    std::string greeting = "Greetings...\n";
+    greeting += "You can enter these commands:\n";
+    greeting += "\t- USER <your name>\n";
+    greeting += "\t- READ <message number>\n";
+    greeting += "\t- WRITE <your message>\n";
+    greeting += "\t- <quit> or null input to end the connection with server.\n";
 
     msock = passivesocket(port,qlen);
     if (msock < 0) {
@@ -313,11 +376,11 @@ int main (int argc, char** argv) {
             printf("Incoming client.\n");
 
             //sending a Greeting to newly connected client
-            send(ssock,greeting,strlen(greeting),0);
+            send(ssock,greeting.c_str(),greeting.length(),0);
 
-            // do_client(ssock);  //calling the method to proccess the message
-            threads.push_back(std::thread(do_client, ssock));
-            threads.back().join();
+            do_client(ssock);  //calling the method to proccess the message
+            // threads.push_back(std::thread(do_client, ssock));
+            // threads.back().join();
 
             close(ssock);
             printf("Outgoing client removed.\n");
