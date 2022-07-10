@@ -111,34 +111,34 @@ int main (){
 
     // bool contains_non_alpha = std::regex_match(uuid, std::regex("^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$"));
 
-    // std::cout<<contains_non_alpha<<std::endl;
-    std::vector<std::string> words;
-    // std::string text = "User shahriar mj";
+    // // std::cout<<contains_non_alpha<<std::endl;
+    // std::vector<std::string> words;
+    // // std::string text = "User shahriar mj";
     
-    std::fstream strm;
+    // std::fstream strm;
 
-    strm.open("bbserv.txt", std::ios_base::in   );
+    // strm.open("bbserv.txt", std::ios_base::in   );
 
-    if(strm.is_open()){
-        std::cout<<"bbserv file opened!\n";
+    // if(strm.is_open()){
+    //     std::cout<<"bbserv file opened!\n";
 
-        // std::string line;
-        char line[250];
+    //     // std::string line;
+    //     char line[250];
 
-        while ( strm.getline(line, 250, '\n') ) {
-                // strm.getline(line, 250, '\n');
-                std::cout << line << std::endl;
-                words = split(line, std::char_traits<char>::length(line), '/');
+    //     while ( strm.getline(line, 250, '\n') ) {
+    //             // strm.getline(line, 250, '\n');
+    //             std::cout << line << std::endl;
+    //             words = split(line, std::char_traits<char>::length(line), '/');
 
-                // for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
-                //     std::cout << *i << ' ';
-                // }
-                std::cout<<std::endl<<words.size()<<std::endl;
-        }       
+    //             // for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
+    //             //     std::cout << *i << ' ';
+    //             // }
+    //             std::cout<<std::endl<<words.size()<<std::endl;
+    //     }       
 
-    } else {
-        std::cout<<"Error, bbserv file Not opened!\n";
-    }
+    // } else {
+    //     std::cout<<"Error, bbserv file Not opened!\n";
+    // }
     
     
     // strm << text << std::endl;
@@ -165,7 +165,52 @@ int main (){
     //     std::cout << i << std::endl;
     // }
 
-    
+    std::fstream strm{"bbserv.txt",
+                            std::ios_base::in | std::ios_base::out | std::ios_base::binary};
+    if (!strm.is_open())
+    {
+        std::cerr << "Failed to open file" << std::endl;
+        return -1;
+    }
+
+    std::string movieName{};
+    std::getline(std::cin, movieName);
+
+    std::string line{};
+    line.reserve(256);
+
+    long long int pos = strm.tellp();
+    for (line; std::getline(strm, line);)
+    {
+        if (line.find(movieName) != std::string::npos){
+            std::cout<<line<< " " << line.find(movieName)<<std::endl;
+            break;
+        }
+        line.clear();
+        pos = strm.tellp();
+        std::cout<<"pos: "<<pos<<std::endl;
+
+    }
+
+    if (strm.eof())
+    {
+        std::cerr << "Failed to find the movie by name" << std::endl;
+        return -1;
+    }
+
+    long long int curPos = strm.tellp();
+
+    // TODO: check format
+    long long int commaPos = line.find('/');
+    std::cout<<"slash position: " << commaPos << " pos + slash: " << pos+commaPos << std::endl;
+    strm.seekp( pos + commaPos + 1);
+
+    std::string liked = " inputs ";
+    strm << liked;
+    // strm.seekp(pos + commaPos);
+    // strm << ++liked;
+
+
     return 0;
     
 }

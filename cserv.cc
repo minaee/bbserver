@@ -177,7 +177,7 @@ void do_client (int sd) {
 
     // Create the writers using the same synchronized file
     Writer writer1(synchronizedFile);
-    Writer writer2(synchronizedFile);
+    // Writer writer2(synchronizedFile);
 
     // Loop while the client has something to say...
     while ((n = readline(sd,req,ALEN-1)) != recv_nodata) {
@@ -284,7 +284,18 @@ void do_client (int sd) {
             send(sd,uuid.c_str(),uuid.length(),0);
             send(sd,"\n",1,0);
         }
-        // else if(words[0] == "READ")
+        // else if(words[0] == "REPLACE"){
+        //     std::cout<<"received a REPLACE command.\n";
+
+            
+        //     std::vector<std::string> temp = split((char*)words[1].c_str(), words[1].length(), '/');
+        //     std::cout<<temp[0]<< " " << temp[1]<<std::endl;
+        //     std::string msg_number = temp[0];
+        //     std::string new_msg = temp[1];
+
+        //     std::fstream strm{"bbserv.txt",
+        //                     std::ios_base::in | std::ios_base::out | std::ios_base::binary};
+        // }
         
 
         // for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
