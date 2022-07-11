@@ -11,3 +11,49 @@ WRITE hey yoy
 USER asqar
 WRITE hello asqar 1
 READ 3bb785a26e6e1000
+USER asqar
+WRITE hello asqar today
+REPLACE e7b49517e65b1000/hello asqar tommorow
+USER asqar
+WRITE hello today asqar
+REPLACE a8e38cf0319b1000/hello asqar tomorrow
+WRITE helloo asqar
+REPLACE c0ecebf673ba1001/asqary
+USER asqar
+WRITE hello asqary
+REPLACE 03386fd714df1000/just hello
+USER asqar
+WRITE asqary 1
+REPLACE 0f82dc7e3d9c1000/new asqary 1
+USER asqary
+WRITE asqary 1
+REPLACE 103fb6050ac71000/asqary 2
+USER asqar
+WRITE helo asary
+USER asqaar
+WRITE asqariiiii
+REPLACE 3365f53125b91000/asqar tamam
+USER assqar
+WRITE my message
+REPLACE e6533afdd15d1000/my message 2
+REPLACE e6533afdd15d1000/465
+USER asqar
+WRITE hey you
+REPLACE c45cea7a17781000/456897
+USER 6a6a
+WRITE 6a6a 1
+REPLACE 6efb6e3b70891000/4564566
+REPLACE 6efb6e3b70891000/hi hi hi
+REPLACE 6efb6e3b70891000/hey you
+REPLACE 6efb6e3b70891000/hey youu
+REPLACE 66efb6e3b70891000/hey you
+REPLACE 6efb6e3b70891000/new hey
+USER asqar2
+REPLACE 6efb6e3b70891000/heyyy you
+REPLACE c45cea7a17781000/hi
+USER reza
+REPLACE c45cea7a17781000/ops
+REPLACE c45cea7a17781000/dodol
+REPLACE c45cea7a17781000/doli
+USER 777
+REPLACE c45cea7a17781000/666

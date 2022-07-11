@@ -8,6 +8,8 @@
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 #include <regex>
+#include "tcp_utils.h"
+
 
 using namespace std;
 
@@ -87,12 +89,6 @@ std::vector<std::string> split(char str[], int n, char del){
 }
 
 
-void change_line(){
-    
-    
-}
-
-
 int main (){
     
     // std::vector<std::thread> threads;
@@ -110,6 +106,7 @@ int main (){
     // std::cout<<uuid.size()<<std::endl;
 
     // bool contains_non_alpha = std::regex_match(uuid, std::regex("^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$"));
+
 
     // // std::cout<<contains_non_alpha<<std::endl;
     // std::vector<std::string> words;
@@ -165,50 +162,50 @@ int main (){
     //     std::cout << i << std::endl;
     // }
 
-    std::fstream strm{"bbserv.txt",
-                            std::ios_base::in | std::ios_base::out | std::ios_base::binary};
-    if (!strm.is_open())
-    {
-        std::cerr << "Failed to open file" << std::endl;
-        return -1;
-    }
+    // std::fstream strm{"bbserv.txt",
+    //                         std::ios_base::in | std::ios_base::out | std::ios_base::binary};
+    // if (!strm.is_open())
+    // {
+    //     std::cerr << "Failed to open file" << std::endl;
+    //     return -1;
+    // }
 
-    std::string movieName{};
-    std::getline(std::cin, movieName);
+    // std::string movieName{};
+    // std::getline(std::cin, movieName);
 
-    std::string line{};
-    line.reserve(256);
+    // std::string line{};
+    // line.reserve(256);
 
-    long long int pos = strm.tellp();
-    for (line; std::getline(strm, line);)
-    {
-        if (line.find(movieName) != std::string::npos){
-            std::cout<<line<< " " << line.find(movieName)<<std::endl;
-            break;
-        }
-        line.clear();
-        pos = strm.tellp();
-        std::cout<<"pos: "<<pos<<std::endl;
+    // long long int pos = strm.tellp();
+    // for (line; std::getline(strm, line);)
+    // {
+    //     if (line.find(movieName) != std::string::npos){
+    //         std::cout<<line<< " " << line.find(movieName)<<std::endl;
+    //         break;
+    //     }
+    //     line.clear();
+    //     pos = strm.tellp();
+    //     std::cout<<"pos: "<<pos<<std::endl;
 
-    }
+    // }
 
-    if (strm.eof())
-    {
-        std::cerr << "Failed to find the movie by name" << std::endl;
-        return -1;
-    }
+    // if (strm.eof())
+    // {
+    //     std::cerr << "Failed to find the movie by name" << std::endl;
+    //     return -1;
+    // }
 
-    long long int curPos = strm.tellp();
+    // long long int curPos = strm.tellp();
 
-    // TODO: check format
-    long long int commaPos = line.find('/');
-    std::cout<<"slash position: " << commaPos << " pos + slash: " << pos+commaPos << std::endl;
-    strm.seekp( pos + commaPos + 1);
+    // // TODO: check format
+    // long long int commaPos = line.find('/');
+    // std::cout<<"slash position: " << commaPos << " pos + slash: " << pos+commaPos << std::endl;
+    // strm.seekp( pos + commaPos + 1);
 
-    std::string liked = " inputs ";
-    strm << liked;
-    // strm.seekp(pos + commaPos);
-    // strm << ++liked;
+    // std::string liked = " inputs ";
+    // strm << liked;
+    // // strm.seekp(pos + commaPos);
+    // // strm << ++liked;
 
 
     return 0;

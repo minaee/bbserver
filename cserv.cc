@@ -266,18 +266,69 @@ void do_client (int sd) {
             send(sd,uuid.c_str(),uuid.length(),0);
             send(sd,"\n",1,0);
         }
-        // else if(words[0] == "REPLACE"){
-        //     std::cout<<"received a REPLACE command.\n";
+        else if(words[0] == "REPLACE"){
+            std::cout<<"received a REPLACE command.\n";
 
-            
-        //     std::vector<std::string> temp = split((char*)words[1].c_str(), words[1].length(), '/');
-        //     std::cout<<temp[0]<< " " << temp[1]<<std::endl;
-        //     std::string msg_number = temp[0];
-        //     std::string new_msg = temp[1];
+            std::string command_body;
+            for(int i=1 ; i<(int)words.size() ; i++)
+                command_body += words[i] + " ";
+            std::vector<std::string> temp = split((char*)command_body.c_str(), command_body.length(), '/');
 
-        //     std::fstream strm{"bbserv.txt",
-        //                     std::ios_base::in | std::ios_base::out | std::ios_base::binary};
-        // }
+            std::cout<<temp[0]<< "\t" << temp[1]<<std::endl;
+            std::string msg_number = temp[0];
+            std::string new_msg = temp[1];
+
+            std::string respond;
+
+            std::fstream strm("bbserv.txt",
+                            std::ios_base::in | std::ios_base::out | std::ios_base::binary);
+
+            if(strm.is_open()){
+                std::cout<<"the bbserv file is open."<<std::endl;
+
+                std::vector<std::string> temp_line;
+                char line[250];
+                bool found = 0;
+                // int size_old_msg ;
+
+                while ( strm.getline(line, 250, '\n') ) {
+                        // strm.getline(line, 250, '\n');
+                        // std::cout << line << std::endl;
+                        temp_line = split(line, std::char_traits<char>::length(line), '/');
+
+                        // for (std::vector<std::string>::const_iterator i = temp_line.begin(); i != temp_line.end(); i++){
+                        //     std::cout << *i << ' ';
+                        // }
+                        std::cout<<temp_line[0]<<"\t"<<temp_line[1]<<"\t"<<msg_number<<std::endl;
+                        if(temp_line[0] == msg_number){
+
+                            found = true;                            
+                            
+                            long long int pos = strm.tellp(); 
+                            std::string null_msg;
+                            for(int i=0 ; i<(int)strlen(line) ; i++)
+                                null_msg[i] = ' ';
+                            strm.seekp(pos - strlen(line) - 1);
+                            strm << null_msg;
+                            respond = msg_number + "/" + poster + "/" + new_msg;
+                            strm << respond;
+                        } 
+                }
+
+                if(found == false){
+                    std::cout<<"message number not found!\n";
+                }
+                
+                
+
+            } else {
+                // std::cout<<"Error, bbserv file Not opened!\n";
+                // ERROR READ text
+                respond = "ERROR REPLACE the bulletin board file not found!\n";
+                send(sd,respond.c_str(),respond.length(),0);
+                
+            }
+        }
         
 
         
@@ -323,7 +374,6 @@ int main (int argc, char** argv) {
     // strm_bbserv.open("bbserv.txt", std::ios_base::in | std::ios_base::out );
 
     std::vector<std::thread> threads;
-
     // for(int i=0 ; i<5 ; i++){
     //     threads.push_back(std::thread(do_client, ssock));
     // }
@@ -334,6 +384,7 @@ int main (int argc, char** argv) {
     greeting += "\t- USER <your name>\n";
     greeting += "\t- READ <message number>\n";
     greeting += "\t- WRITE <your message>\n";
+    greeting += "\t- REPLACE <message number>/<your new message to replcae old one>\n";
     greeting += "\t- <quit> or null input to end the connection with server.\n";
 
     msock = passivesocket(port,qlen);

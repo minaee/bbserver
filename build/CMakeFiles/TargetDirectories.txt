@@ -1,2 +1,0 @@
-/home/shahriar/cpp/bbserver/build/CMakeFiles/rebuild_cache.dir
-/home/shahriar/cpp/bbserver/build/CMakeFiles/edit_cache.dir
