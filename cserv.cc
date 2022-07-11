@@ -14,7 +14,7 @@
 
 
 /*
-* an extention to professor's implementation of concurrent server
+* an extention to original implementation of concurrent server
 * attempting to implement the CS 590 project
 *
 * By Shahriar Minaei-Jalil
@@ -133,24 +133,6 @@ std::vector<std::string> split(char str[], int n, char del){
     words.push_back(temp);
     
     return words;
-}
-
-
-/*
-* process the client command
-*/
-void proccess_req(char req[]){
-    std::string command = req;
-    // printf("text in proccess_req is: %s.\n", command.c_str());
-
-    std::vector<std::string> words;
-
-    // words = split(req, ' ');
-
-    for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
-        std::cout << *i << ' ';
-        // printf("%s ", *i);
-    }
 }
 
 
@@ -298,15 +280,7 @@ void do_client (int sd) {
         // }
         
 
-        // for (std::vector<std::string>::const_iterator i = words.begin(); i != words.end(); i++){
-        //     std::cout << *i << ' ';
-        //     // printf("%s ", *i);
-        // }
         
-
-        // send(sd,ack,strlen(ack),0);
-        // send(sd,req,strlen(req),0);
-        // send(sd,"\n",1,0);
     }
     // read 0 bytes = EOF:
     printf("Connection closed by client.\n");
