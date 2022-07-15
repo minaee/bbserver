@@ -25,4 +25,3 @@ cserv: cserv.o tcp_utils.o
 
 clean:
 	rm -f cserv triv_client *~ *.o *.bak core \#*
-

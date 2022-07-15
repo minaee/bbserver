@@ -51,7 +51,7 @@ class SynchronizedFile {
             // Open file for writing...
             // stream to read and write from/into 'bbserv.txt' file
             
-            strm_bbserv.open("bbserv.txt", std::ios_base::out | std::ios_base::app);
+            strm_bbserv.open(path, std::ios_base::out | std::ios_base::app);
         }
 
         void write (const string& dataToWrite) {
@@ -142,7 +142,7 @@ std::vector<std::string> split(char str[], int n, char del){
  * connection.  Note that an empty request also terminates the
  * connection.  Same as for the purely iterative server.
  */
-void do_client (int sd) {
+void do_client (int sd, std::shared_ptr<SynchronizedFile> sf) {
     const int ALEN = 256;
     char req[ALEN];
     const char* ack = "ACK: ";
@@ -154,11 +154,12 @@ void do_client (int sd) {
     std::ofstream out_to_file;
     out_to_file.open("received_commands.txt", std::ios::app);
 
-    // Create the synchronized file
-    auto synchronizedFile = std::make_shared<SynchronizedFile>("bbserv.txt");
+    // std::cout<<sf.get()<<std::end;
+    // auto synchronizedFile = std::make_shared<SynchronizedFile>("bbserv.txt");
+    // printf("%p\n", synchronizedFile.get()); // now they're the same!
 
     // Create the writers using the same synchronized file
-    Writer writer1(synchronizedFile);
+    Writer writer1(sf);
     // Writer writer2(synchronizedFile);
 
     // Loop while the client has something to say...
@@ -378,6 +379,9 @@ int main (int argc, char** argv) {
     //     threads.push_back(std::thread(do_client, ssock));
     // }
 
+    // Create the synchronized file
+    auto synchronizedFile = std::make_shared<SynchronizedFile>("bbserv.txt");
+    // printf("%p\n", synchronizedFile.get()); // now they're the same!
 
     std::string greeting = "Greetings...\n";
     greeting += "You can enter these commands:\n";
@@ -403,7 +407,7 @@ int main (int argc, char** argv) {
             perror("accept");
             return 1;
         }
-        
+
         int pid = fork();
         if (pid < 0)
             perror("fork");
@@ -414,7 +418,7 @@ int main (int argc, char** argv) {
             //sending a Greeting to newly connected client
             send(ssock,greeting.c_str(),greeting.length(),0);
 
-            do_client(ssock);  //calling the method to proccess the message
+            do_client(ssock, synchronizedFile);  //calling the method to proccess the message
             // threads.push_back(std::thread(do_client, ssock));
             // threads.back().join();
 
