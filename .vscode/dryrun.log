@@ -1,5 +1,8 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/shahriar/cpp/bbserver'
+g++ -g -pedantic -Wall -Werror -pthread -c -o client.o client.cc
+g++ -g -pedantic -Wall -Werror -pthread -c -o tcp_utils.o tcp_utils.cc
+g++ -g -pedantic -Wall -Werror -pthread -o triv_client client.o tcp_utils.o
 g++ -g -pedantic -Wall -Werror -pthread -c -o cserv.o cserv.cc
 g++ -g -pedantic -Wall -Werror -pthread -o cserv cserv.o tcp_utils.o
 make: Leaving directory '/home/shahriar/cpp/bbserver'

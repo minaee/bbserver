@@ -27,7 +27,9 @@ repeat step 5 for more clients.
  6. in the client's terminal you have these options:
 
     > USER <the client's name>
+    > READ <message number>
     > WRITE <message>
+    > REPLACE <message number>/<your new message to replcae old one>
     > <quit> or <blank input>  // to disconnect this client from server
 
 check bbserv.txt for received messages.
