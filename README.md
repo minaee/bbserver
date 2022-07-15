@@ -32,4 +32,5 @@ repeat step 5 for more clients.
     > REPLACE <message number>/<your new message to replcae old one>
     > <quit> or <blank input>  // to disconnect this client from server
 
+
 check bbserv.txt for received messages.
