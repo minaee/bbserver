@@ -57,3 +57,10 @@ REPLACE c45cea7a17781000/dodol
 REPLACE c45cea7a17781000/doli
 USER 777
 REPLACE c45cea7a17781000/666
+USER asqar
+WRITE hello asqar
+WRITE hi
+USER shahriar
+WRITE hello server
+REPLACE 4eacc9e541ef1000/second hello shahriar
+QUIT

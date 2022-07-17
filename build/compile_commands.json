@@ -1,12 +1,12 @@
 [
 {
   "directory": "/home/shahriar/cpp/bbserver/build",
-  "command": "/home/linuxbrew/.linuxbrew/bin/g++-11    -g   -o CMakeFiles/bbserver.dir/cserv.cc.o -c /home/shahriar/cpp/bbserver/cserv.cc",
+  "command": "/home/linuxbrew/.linuxbrew/bin/g++-11     -pthread -fpermissive -Wall -g -g   -o CMakeFiles/bbserver.dir/cserv.cc.o -c /home/shahriar/cpp/bbserver/cserv.cc",
   "file": "/home/shahriar/cpp/bbserver/cserv.cc"
 },
 {
   "directory": "/home/shahriar/cpp/bbserver/build",
-  "command": "/home/linuxbrew/.linuxbrew/bin/g++-11    -g   -o CMakeFiles/bbserver.dir/tcp_utils.cc.o -c /home/shahriar/cpp/bbserver/tcp_utils.cc",
+  "command": "/home/linuxbrew/.linuxbrew/bin/g++-11     -pthread -fpermissive -Wall -g -g   -o CMakeFiles/bbserver.dir/tcp_utils.cc.o -c /home/shahriar/cpp/bbserver/tcp_utils.cc",
   "file": "/home/shahriar/cpp/bbserver/tcp_utils.cc"
 }
 ]

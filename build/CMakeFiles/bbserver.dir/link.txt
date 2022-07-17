@@ -1,1 +1,1 @@
-/home/linuxbrew/.linuxbrew/bin/g++-11  -g  -rdynamic CMakeFiles/bbserver.dir/cserv.cc.o CMakeFiles/bbserver.dir/tcp_utils.cc.o  -o bbserver 
+/home/linuxbrew/.linuxbrew/bin/g++-11   -pthread -fpermissive -Wall -g -g  -rdynamic CMakeFiles/bbserver.dir/cserv.cc.o CMakeFiles/bbserver.dir/tcp_utils.cc.o  -o bbserver 

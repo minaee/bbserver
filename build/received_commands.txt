@@ -1,16 +1,5 @@
-USER shahriar
-REPLACE 6efb6e3b70891000/new message 666
-REPLACE 6efb6e3b70891000/new message
-USER shahriar
-USER shahriar
-WRITE asqaaaaaar
-USER asqariii
-WRITE helo0o0o0o
-WRITE asqarii203948
-WRITE helo12712836
-WRITE ali asqaaar
-WRITE ali qasasdasdasd
-USER
-USER asqar
-WRITE REza
-USER ali
+USER hi
+WRITE asqariiii hi
+READ
+USER myuser
+WRITE hiiiii

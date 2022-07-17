@@ -43,6 +43,16 @@
 
 std::mutex m;   //  to gaurd the counter
 int counter = 1000; // counter to follow the message-number sequence
+
+// Global Configs
+int THMAX;
+int BBPORT;
+int SYNCPORT;
+std::string BBFILE;
+std::string PEERS;
+bool DAEMON;
+bool DEBUG;
+
 using namespace std;
 
 class SynchronizedFile {
@@ -198,7 +208,14 @@ void do_client (int sd, std::shared_ptr<SynchronizedFile> sf) {
             
         }
         else if(words[0] == "READ"){
-            std::string message_number = words[1] ;
+            std::string message_number = "";
+            if(words.size() < 2){
+                std::cout<<"you should enter a message number!\n";
+                break;
+            }else{
+                std::string message_number = words[1] ;
+            }
+            
 
             std::fstream strm;
             strm.open("bbserv.txt", std::ios_base::in );
@@ -330,7 +347,26 @@ void do_client (int sd, std::shared_ptr<SynchronizedFile> sf) {
                 
             }
         }
-        
+        else if(words[0] == "QUIT"){
+            std::string respond = "BYE ";
+
+            if(words.size() < 2){
+                send(sd,respond.c_str(),respond.length(),0);
+                send(sd,"\n",1,0);
+                
+                printf("Connection closed by client.\n");
+                shutdown(sd,1);
+                return;
+            }
+            else{
+                send(sd,respond.c_str(),respond.length(),0);
+                send(sd,"\n",1,0);
+
+                printf("Connection closed by client.\n");
+                shutdown(sd,1);   
+                return;             
+            }
+        }
 
         
     }
@@ -338,6 +374,167 @@ void do_client (int sd, std::shared_ptr<SynchronizedFile> sf) {
     printf("Connection closed by client.\n");
     shutdown(sd,1);
 }
+
+
+
+
+/*
+* load configuration variables from bbserv.conf
+*/
+bool LoadConfiguration(string FileName) {
+    // cout<<"Server configuration is loading ... "<<"\n"<<FileName<<endl;
+
+    // Set by default values
+    THMAX=20;
+    BBPORT=9000;
+    SYNCPORT=10000;
+    DAEMON=true;
+    DEBUG=false;
+
+    // Try to open config file
+    string line;
+    ifstream myfile (FileName, std::ios_base::in);
+    if (myfile.is_open())
+    {
+        // cout<<"file is open!\n";
+        while ( getline (myfile,line) )
+        {
+            int IndexOfEq=line.find("=",0);
+            string Tag=line.substr(0,IndexOfEq);
+
+            // cout << "Tag: " << Tag << endl;
+
+            if(Tag=="THMAX")
+            {
+                try
+                {
+                    THMAX=stoi(line.substr(IndexOfEq+1,line.length()-IndexOfEq));
+                }
+                catch(const std::exception& e)
+                {
+                    cout<<"Error : "<<e.what();
+                    return false;
+                }
+            }
+            else if (Tag=="BBPORT")
+            {
+            try
+                {
+                    BBPORT=stoi(line.substr(IndexOfEq+1,line.length()-IndexOfEq));
+                }
+                catch(const std::exception& e)
+                {
+                    cout<<"Error : "<<e.what();
+                    return false;
+                }
+            }
+            else if (Tag=="SYNCPORT")
+            {
+            try
+                {
+                    SYNCPORT=stoi(line.substr(IndexOfEq+1,line.length()-IndexOfEq));
+                }
+                catch(const std::exception& e)
+                {
+                    cout<<"Error : "<<e.what();
+                    return false;
+                }
+            }
+            else if (Tag=="BBFILE")
+            {
+            try
+                {
+                    BBFILE=line.substr(IndexOfEq+1,line.length()-IndexOfEq);
+                    if (BBFILE.empty())
+                        return false;
+                }
+                catch(const std::exception& e)
+                {
+                    cout<<"Error : "<<e.what();
+                    return false;
+                }
+            }
+            else if (Tag=="PEERS")
+            {
+            try
+                {
+                    PEERS=line.substr(IndexOfEq+1,line.length()-IndexOfEq);
+                }
+                catch(const std::exception& e)
+                {
+                    cout<<"Error : "<<e.what();
+                    return false;
+                }
+            }
+            else if (Tag=="DAEMON")
+            {
+            try
+                {
+                    string Temp=line.substr(IndexOfEq+1,line.length()-IndexOfEq);
+
+                    if(Temp[Temp.size() - 1] == '\r'){
+                        Temp.erase(Temp.size() - 1);
+                    }
+                    // cout << "this is daemon: "<< Temp << endl;
+
+                    if (Temp=="1" ||Temp=="true"){
+                        DAEMON=true;
+                        cout << "this is inside daemon: "<< DAEMON << endl;
+                    }
+                        
+                    else if (Temp=="0" ||Temp=="false"){
+                        DAEMON=false;
+                        cout << "this is inside daemon: "<< DAEMON << endl;
+                    }
+                        
+                    else{
+                        cout << "daemon returns false shit! "<< endl;
+                        return false;
+                    }
+                        
+                }
+                catch(const std::exception& e)
+                {
+                    cout<<"Error : "<<e.what();
+                    return false;
+                }
+            }
+            else if (Tag=="DEBUG")
+            {
+            try
+                {
+                    string Temp=line.substr(IndexOfEq+1,line.length()-IndexOfEq);
+
+                    // cout << "this is DEBUG: "<< Temp << endl;
+
+
+                    if (Temp=="1" ||Temp=="true")
+                        DEBUG=true;
+                    else if (Temp=="0" ||Temp=="false")
+                        DEBUG=false;
+                    else
+                        return false;
+                }
+                catch(const std::exception& e)
+                {
+                    cout<<"Error : "<<e.what();
+                    return false;
+                }
+            }
+         }
+
+        myfile.close();
+    }
+    else
+    {
+        // cout << "shit returns false"<< endl;
+        return false;
+    }
+
+    cout<<"Server configuration has loaded ..."<<"\n\n";
+    return true;
+}
+
 
 /*
  * Cleans up "zombie children," i.e., processes that did not really
@@ -351,6 +548,16 @@ void cleanup_zombies (int sig) {
 }
 
 int main (int argc, char** argv) {
+    // if(LoadConfiguration("bbserv.conf"))
+    //     cout << "Server configuration load completed."<<"\n";
+    // else // An error on configuration load process
+    //     {
+    //     cout << "Server configuration load error"<<endl;
+    //     // cin.get();
+    //     // return -1;
+    //     }
+
+
     const int port = 9001;   // port to listen to
     const int qlen = 32;     // incoming connections queue length
 
@@ -369,6 +576,8 @@ int main (int argc, char** argv) {
     // out stream to write into 'bbserv.conf' file
     std::fstream strm_conf;
     strm_conf.open("bbserv.conf", std::ios_base::in );
+
+    
 
     // // stream to read and write from/into 'bbserv.conf' file
     // std::fstream strm_bbserv;

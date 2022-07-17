@@ -1,13 +1,12 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # GNU Make 4.2.1
- 
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul 15 17:39:57 2022
+# Make data base, printed on Sun Jul 17 12:29:26 2022
 
 # Variables
 
@@ -48,19 +47,17 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:56462
+JOURNAL_STREAM = 8:53933
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
-# makefile (from 'Makefile', line 1)
-MAKEFILE_LIST :=  Makefile
+# makefile
+MAKEFILE_LIST := 
 # automatic
 @F = $(notdir $@)
 # environment
 GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # environment
 USERNAME = shahriar
-# makefile (from 'Makefile', line 2)
-CXXFLAGS = -g -pedantic -Wall -Werror -pthread
 # environment
 MAKELEVEL := 0
 # environment
@@ -70,7 +67,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 INFOPATH = /home/linuxbrew/.linuxbrew/share/info:/home/linuxbrew/.linuxbrew/share/info:
 # environment
-MANAGERPID = 2540
+MANAGERPID = 2482
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -86,7 +83,7 @@ GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-SESSION_MANAGER = local/Z50-70:@/tmp/.ICE-unix/2768,unix/Z50-70:/tmp/.ICE-unix/2768
+SESSION_MANAGER = local/Z50-70:@/tmp/.ICE-unix/2712,unix/Z50-70:/tmp/.ICE-unix/2712
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -94,7 +91,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 2ef5bed883574e8d9b3204c0d6546619
+INVOCATION_ID = 16fc78c71eb3449abd6cdd9882ab4911
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -104,7 +101,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 5683
+GIO_LAUNCHED_DESKTOP_FILE_PID = 11588
 # automatic
 %F = $(notdir $%)
 # environment
@@ -114,7 +111,7 @@ PWD = /home/shahriar/cpp/bbserver
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2731
+SSH_AGENT_PID = 2675
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -162,7 +159,7 @@ USER = shahriar
 # environment
 LC_MONETARY = en_CA.UTF-8
 # makefile
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := 
 # environment
 XDG_CURRENT_DESKTOP = Unity
 # automatic
@@ -201,8 +198,6 @@ MAKEFILES :=
 LC_NUMERIC = en_CA.UTF-8
 # automatic
 <F = $(notdir $<)
-# makefile (from 'Makefile', line 1)
-CXX = g++
 # environment
 LC_MEASUREMENT = en_CA.UTF-8
 # environment
@@ -228,9 +223,9 @@ LC_ADDRESS = en_CA.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 5683
+VSCODE_PID = 11588
 # variable set hash-table stats:
-# Load=109/1024=11%, Rehash=0, Collisions=19/139=14%
+# Load=107/1024=10%, Rehash=0, Collisions=19/129=15%
 
 # Pattern-specific Variable Values
 
@@ -248,67 +243,26 @@ VSCODE_PID = 5683
 
 # Files
 
-cserv: cserv.o tcp_utils.o
-#  Implicit rule search has not been done.
-#  File does not exist.
-#  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/5=0%
-#  recipe to execute (from 'Makefile', line 24):
-	$(CXX) $(CXXFLAGS) -o cserv cserv.o tcp_utils.o
-
-all: triv_client cserv
+# Not a target:
+all:
 #  Command line target.
 #  Implicit rule search has been done.
 #  File does not exist.
-#  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/5=0%
-
-client.o: tcp_utils.h client.cc
-#  Implicit rule search has not been done.
-#  Last modified 2022-07-11 18:39:16.373542241
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'Makefile', line 12):
-	$(CXX) $(CXXFLAGS) -c -o client.o client.cc
-
-# Not a target:
-cserv.cc:
-#  Implicit rule search has been done.
-#  Last modified 2022-07-13 21:53:50.184760932
-#  File has been updated.
- 
-#  Successfully updated.
-
-# Not a target:
-client.cc:
-#  Implicit rule search has been done.
-#  Last modified 2022-07-04 02:18:32.043653
-#  File has been updated.
-#  Successfully updated.
-
-# Not a target:
-tcp_utils.h:
-#  Implicit rule search has been done.
-#  Last modified 2022-07-04 02:06:26.523866
-#  File has been updated.
-#  Successfully updated.
-
-# Not a target:
-.SUFFIXES:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
 #  File has not been updated.
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-15 17:39:52.03863448
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Failed to be updated.
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
 
 # Not a target:
 .DEFAULT:
@@ -316,77 +270,30 @@ Makefile:
 #  Modification time never checked.
 #  File has not been updated.
 
-clean:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 27):
-	rm -f cserv triv_client *~ *.o *.bak core \#*
-
-tcp_utils.o: tcp_utils.h tcp_utils.cc
-#  Implicit rule search has not been done.
-#  Last modified 2022-07-11 18:39:16.457543719
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'Makefile', line 8):
-	$(CXX) $(CXXFLAGS) -c -o tcp_utils.o tcp_utils.cc
-
-triv_client: client.o tcp_utils.o
-#  Implicit rule search has not been done.
-#  Last modified 2022-07-11 18:39:16.545545269
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'Makefile', line 15):
-	$(CXX) $(CXXFLAGS) -o triv_client client.o tcp_utils.o
-
 # Not a target:
-tcp_utils.cc:
+GNUmakefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-10 23:14:37.790706867
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
-
-cserv.o: tcp_utils.h cserv.cc
-#  Implicit rule search has not been done.
-#  Implicit/static pattern stem: ''
-#  Last modified 2022-07-11 20:28:45.186082386
-#  File has been updated.
-#  Needs to be updated (-q is set).
-# automatic
-# @ := cserv.o
-# automatic
-# % := 
-# automatic
-# * := 
-# automatic
-# + := tcp_utils.h cserv.cc
-# automatic
-# | := 
-# automatic
-# < := tcp_utils.h
-# automatic
-# ^ := tcp_utils.h cserv.cc
-# automatic
-# ? := cserv.cc
-# variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=1/13=8%
-#  recipe to execute (from 'Makefile', line 21):
-	$(CXX) $(CXXFLAGS) -c -o cserv.o cserv.cc
+#  Failed to be updated.
 
 # files hash-table stats:
-# Load=14/1024=1%, Rehash=0, Collisions=0/40=0%
+# Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
 # VPATH Search Paths
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 30 / storage = 295 B / avg = 9 B
-# current buf: size = 8162 B / used = 295 B / count = 30 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 31 / storage = 310 B / avg = 10 B
+# current buf: size = 8162 B / used = 310 B / count = 31 / avg = 10 B
 
-# strcache performance: lookups = 59 / hit rate = 49%
+# strcache performance: lookups = 34 / hit rate = 8%
 # hash-table stats:
-# Load=30/8192=0%, Rehash=0, Collisions=1/59=2%
-# Finished Make data base on Fri Jul 15 17:39:57 2022
+# Load=31/8192=0%, Rehash=0, Collisions=1/34=3%
+# Finished Make data base on Sun Jul 17 12:29:26 2022
 
  
