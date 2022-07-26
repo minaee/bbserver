@@ -9,3 +9,6 @@ USER hi
 WRITE hi 1
 WRITE hi2
 WRITE hi3
+READ 0
+USER ali
+READ 1

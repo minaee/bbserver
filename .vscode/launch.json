@@ -28,6 +28,13 @@
             ],
             "preLaunchTask": "C/C++: g++-11 build active file",
             "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "autoAttachChildProcesses": true,
+            "name": "debug-child",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
         }
     ],
     "version": "2.0.0"

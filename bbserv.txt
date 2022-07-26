@@ -1,6 +1,3 @@
-0/nobody/hey 
-0/nobody/hey 2 
-0/a123/msg1 
 0/a123/msg2 
 1/nobody/hi1 
 2/nobody/hi2 

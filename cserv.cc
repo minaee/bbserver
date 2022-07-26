@@ -267,24 +267,29 @@ void do_client (int sd, std::shared_ptr<SynchronizedFile> sf) {
             
         }
         else if(words[0] == "READ"){
+            std::cout<<"received a READ command.\n";
+
+            std::cout<<"size: "<<words.size()<<std::endl;
             std::string message_number = "";
             if(words.size() < 2){
                 std::cout<<"you should enter a message number!\n";
                 break;
             }else{
-                std::string message_number = words[1] ;
+                std::cout<<"words[1] in read: "<<words[1]<<std::endl;
+                message_number = words[1] ;
             }
             
+            std::cout<<"message number: "<<message_number<<std::endl;
 
-            std::fstream strm;
+            std::ifstream strm;
             strm.open("bbserv.txt", std::ios_base::in );
             std::string usr, msg, respond;
             if(strm.is_open()){
-                // std::cout<<"bbserv file opened!\n";
+                std::cout<<"bbserv file opened in READ section!\n";
 
                 std::vector<std::string> temp;
                 char line[250];
-                bool found = 0;
+                bool found = false;
 
                 while ( strm.getline(line, 250, '\n') ) {
                         // strm.getline(line, 250, '\n');
@@ -299,7 +304,8 @@ void do_client (int sd, std::shared_ptr<SynchronizedFile> sf) {
                             usr = temp[1];
                             msg = temp[2];
                             // MESSAGE message-number poster/message
-                            respond = "MESSAGE" + ' ' + message_number + ' ' + usr + '/' + msg;
+                            respond = "MESSAGE";
+                            respond += " " + message_number + " " + usr + "/" + msg;
                             send(sd,respond.c_str(),respond.length(),0);
                             send(sd,"\n",1,0);
                             found = true;
@@ -423,6 +429,11 @@ void do_client (int sd, std::shared_ptr<SynchronizedFile> sf) {
                 shutdown(sd,1);   
                 return;             
             }
+        }
+        else {
+            std::string respond = "Wrong input!";
+            send(sd,respond.c_str(),respond.length(),0);
+            send(sd,"\n",1,0);
         }
 
         
