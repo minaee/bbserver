@@ -64,3 +64,31 @@ USER shahriar
 WRITE hello server
 REPLACE 4eacc9e541ef1000/second hello shahriar
 QUIT
+USER shahriar
+WRITE salam 1
+WRITe salam 2
+WRITE salam 2
+WRITe salam 3
+WRITE salam 3
+WRITE last message
+READ 92764a318b0e1003
+REPLACE 92764a318b0e1003/only last
+USER asqar
+WRITE hello montreal
+WRITE hello 2
+WRITE hello 3
+USER shahriar
+WRITE msg1
+USER ali
+WRITE hey ali
+WRITE hey ali 2
+WRITE hey
+WRITE hey 2
+USER a123
+WRITE msg1
+WRITE msg2
+WRITE hi1
+WRITE hi2
+USER ali
+WRITE hi3
+REPLACE 3/h3

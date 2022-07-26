@@ -15,23 +15,53 @@ using namespace std;
 
 
 
-auto generate_uuid(std::string counter){
-    boost::uuids::random_generator generator;
 
-    boost::uuids::uuid uuid1 = generator();
-    // std::cout << uuid1 << std::endl;
+std::string generate_uuid(){
 
-    int previous = stoi(counter);
+    std::ifstream infile;     
+    infile.open("bbserv.txt", std::ios_base::in);
+    string lastLine;  
+    if(infile.is_open())
+    {
+        // getline(infile,lastLine);                      // Read the current line
+        // cout << "getline: " << lastLine << '\n';     // Display it
 
-    // Function to find the last
-    // character ch in str
-    size_t found = to_string(uuid1).find_last_of("-");
+        int pos = infile.tellg();
+        std::cout<< "before seekg: " << pos<<std::endl;
 
-    if (found != string::npos){
-        return to_string(uuid1).substr(found+1) + to_string(previous+1);
-    } else{
-        return (std::string)"123456789000" + to_string(previous+1);
+        infile.seekg(-1, ios_base::end);  // go to one spot before the EOF
+
+        pos = infile.tellg();
+        std::cout<< "after seekg: " << pos<<std::endl;
+
+        bool keepLooping = true;
+        while(keepLooping) {
+            char ch;
+            infile.get(ch);                            // Get current byte's data
+
+            int pos = infile.tellg();
+            std::cout<< "pos first: " << pos<<std::endl;
+
+            if((int)infile.tellg() <= 1) {             // If the data was at or before the 0th byte
+                infile.seekg(0);                       // The first line is the last line
+                keepLooping = false;                // So stop there
+            }
+            else if(ch == '\n') {                   // If the data was a newline
+                keepLooping = false;                // Stop at the current position.
+            }
+            else {                                  // If the data was neither a newline nor at the 0 byte
+                infile.seekg(-2,ios_base::cur);        // Move to the front of that data, then to the front of the data before it
+            }
+        }
+
+                  
+        getline(infile,lastLine);                      // Read the current line
+        cout << "Result: " << lastLine << '\n';     // Display it
+
+        infile.close();
     }
+
+    return lastLine;
     
 }
 
@@ -101,7 +131,8 @@ int main (){
     // boost::uuids::uuid uuid2 = generator();
     // std::cout << uuid2 << std::endl;
 
-    // auto uuid = generate_uuid(std::string("1000"));
+    auto uuid = generate_uuid();
+    std::cout<<"last line: "<<uuid<<std::endl;
     // std::cout<<uuid<<std::endl;
     // std::cout<<uuid.size()<<std::endl;
 

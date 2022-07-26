@@ -41,8 +41,6 @@
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 #include <regex>
 
-std::mutex m;   //  to gaurd the counter
-int counter = 1000; // counter to follow the message-number sequence
 
 // Global Configs
 int THMAX;
@@ -93,32 +91,6 @@ class Writer {
 };
 
 
-
-/*
-* generate a unique message number that follows 
-* the previous received message number
-*/
-std::string generate_message_number(int counter){
-
-    boost::uuids::random_generator generator;
-
-    boost::uuids::uuid uuid1 = generator();
-    // std::cout << uuid1 << std::endl;
-
-    // int previous = stoi(counter);
-
-    // Function to find the last
-    // character ch in str
-    size_t found = to_string(uuid1).find_last_of("-");
-    
-    
-    if (found != string::npos){
-        return to_string(uuid1).substr(found+1) + to_string(counter);
-    } else{
-        return (std::string)"123456789ABC" + to_string(counter);
-    }
-    
-}
 /*
 * returns a vector of user command splited by space
 */
@@ -145,6 +117,93 @@ std::vector<std::string> split(char str[], int n, char del){
     return words;
 }
 
+
+
+
+/*
+* generate a unique message number that follows 
+* the previous received message number
+*/
+std::string generate_message_number(){
+
+    
+    std::ifstream infile;     
+    infile.open("bbserv.txt", std::ios_base::in);
+    string lastLine = "\0", before_last_line;  
+    if(infile.is_open())
+    {
+        
+        getline(infile,lastLine);                      // Read the current line
+        if(lastLine == "\n" || lastLine == "\0" || lastLine == "\r"){
+            cout << "it seems the bbserv file is empty, getline: " << lastLine << '\n';     // Display it
+            infile.close();
+            return std::to_string(0);
+        } else {
+
+            // int pos = 0;  // infile.tellg();
+            // std::cout<< "before seekg: " << pos<<std::endl;
+
+            infile.seekg(-1, ios_base::end);  // go to one spot before the EOF
+
+            // pos = infile.tellg();
+            // std::cout<< "after seekg: " << pos<<std::endl;
+
+            char ch;
+            infile.get(ch);    
+            if(ch == '\n') {
+                infile.seekg(-2,ios_base::cur);
+                // pos = infile.tellg();
+                // std::cout<< "after seekg in lastline==enter: " << pos<<std::endl;
+            }
+
+            bool keepLooping = true;
+            while(keepLooping) {
+                char ch;
+                infile.get(ch);                            // Get current byte's data
+
+                // int pos = infile.tellg();
+                // std::cout<< "pos first: " << pos<<std::endl;
+
+                if((int)infile.tellg() <= 1) {             // If the data was at or before the 0th byte
+                    infile.seekg(0);                       // The first line is the last line
+                    keepLooping = false;                // So stop there
+                }
+                else if(ch == '\n') {                   // If the data was a newline
+                    keepLooping = false;                // Stop at the current position.
+                }
+                else {                                  // If the data was neither a newline nor at the 0 byte
+                    infile.seekg(-2,ios_base::cur);        // Move to the front of that data, then to the front of the data before it
+                }
+            }
+
+                    
+            getline(infile,lastLine);                      // Read the current line
+            // cout << "Result: " << lastLine << '\n';     // Display it
+
+            infile.close();
+            
+        }
+        
+        
+    }
+
+    int num;
+    if(lastLine == "\n" || lastLine == "\0" || lastLine == "\r"){
+        std::cout<<"check true"<<std::endl;
+        return std::to_string(0);
+    } else {
+        std::vector<std::string> temp = split((char*)lastLine.c_str(), lastLine.length(), '/');
+        std::cout<<"temp[0]: "<<temp[0]<<std::endl;
+        num = stoi(temp[0]);
+        num += 1;
+        return std::to_string(num);
+    }
+    
+
+    
+
+    
+}
 
 /*
  * Repeatedly receives requests from the client and responds to them.
@@ -264,10 +323,8 @@ void do_client (int sd, std::shared_ptr<SynchronizedFile> sf) {
         else if(words[0] == "WRITE"){
             std::cout<<"received a WRITE command.\n";
             
-            auto uuid = generate_message_number(counter); //generate uuid and assign counter to the end of it
+            auto uuid = generate_message_number(); //generate uuid and assign counter to the end of it
             
-            std::lock_guard<std::mutex> lock(m);
-            counter += 1;    // increase counter for the next message
             
             uuid += "/";
             uuid += poster;

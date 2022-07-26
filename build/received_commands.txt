@@ -3,3 +3,9 @@ WRITE asqariiii hi
 READ
 USER myuser
 WRITE hiiiii
+USER asqarrrrr
+WRITE salam montreal
+USER hi
+WRITE hi 1
+WRITE hi2
+WRITE hi3
